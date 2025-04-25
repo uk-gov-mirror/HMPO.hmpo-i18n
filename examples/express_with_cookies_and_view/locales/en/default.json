@@ -1,0 +1,10 @@
+{
+  "welcome": {
+    "title": "Welcome to cookie example",
+    "message": "This is a random message"
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "serverError": "Internal server error"
+  }
+}

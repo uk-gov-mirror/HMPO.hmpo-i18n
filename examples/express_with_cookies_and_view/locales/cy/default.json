@@ -1,0 +1,10 @@
+{
+  "welcome": {
+    "title": "Croeso i enghraifft cwci",
+    "message": "Neges ar hap yw hon"
+  },
+  "errors": {
+    "notFound": "Tudalen heb ei chanfod",
+    "serverError": "Gwall gweinydd mewnol"
+  }
+}
