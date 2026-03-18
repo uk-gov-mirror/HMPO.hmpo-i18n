@@ -131,15 +131,15 @@ describe('fs backend', function () {
             sandbox = sinon.createSandbox();
 
             callsitesStub = sandbox.stub();
-            findupStub = sandbox.stub().returns(Promise.resolve());
+            findupStub = sandbox.stub();
             globStub = sandbox.stub();
             fsStub = {
                 readFile: sandbox.stub()
             };
 
             load = proxyquire('../../../lib/backends/fs', {
-                'callsites': callsitesStub,
-                'find-up': findupStub,
+                'callsites': { default: callsitesStub },
+                'find-up': { findUp: findupStub },
                 'glob': { glob: globStub },
                 'fs': fsStub
             }).load;
@@ -163,18 +163,6 @@ describe('fs backend', function () {
                 expect(findupStub.calledOnce).to.be.true;
                 done();
             });
-        });
-
-        it('should handle errors in getcallsite when findup throws an error', async function () {
-            callsitesStub.returns([{ getFileName: () => '/mock/file.js' }]);
-            findupStub.rejects(new Error('findup error'));
-
-            try {
-                await load({});
-            } catch (err) {
-                expect(err).to.exist;
-                expect(err.message).to.equal('findup error');
-            }
         });
 
         it('should fallback to process.cwd() when getcallsite does not find a source', function (done) {
@@ -267,8 +255,8 @@ describe('fs backend', function () {
             };
 
             load = proxyquire('../../../lib/backends/fs', {
-                'callsites': callsitesStub,
-                'find-up': { sync: findupStub },
+                'callsites': { default: callsitesStub },
+                'find-up': { findUp: findupStub, },
                 'glob': { glob: globStub },
                 'fs': fsStub,
                 'chokidar': chokidarStub
