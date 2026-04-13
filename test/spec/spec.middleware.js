@@ -228,10 +228,10 @@ describe('i18n.middleware', function () {
 
             instance.render(opts, cb);
 
-            localisedView.existsFn.should.have.been.calledWith('/view1/path/file_fr.html');
-            localisedView.existsFn.should.have.been.calledWith('/view2/path/file_fr.html');
-            localisedView.existsFn.should.have.been.calledWith('/view1/path/file_en.html');
-            localisedView.existsFn.should.have.been.calledWith('/view2/path/file_en.html');
+            localisedView.existsFn.should.have.been.calledWith(path.resolve('/view1', 'path/file_fr.html'));
+            localisedView.existsFn.should.have.been.calledWith(path.resolve('/view2', 'path/file_fr.html'));
+            localisedView.existsFn.should.have.been.calledWith(path.resolve('/view1', 'path/file_en.html'));
+            localisedView.existsFn.should.have.been.calledWith(path.resolve('/view2', 'path/file_en.html'));
         });
 
         it('renders with first found file', () => {
@@ -240,12 +240,12 @@ describe('i18n.middleware', function () {
             instance.path = 'path/file.html';
             opts.lang = ['fr'];
 
-            localisedView.existsFn.withArgs('/view1/path/file_en.html').yields(true);
-            localisedView.existsFn.withArgs('/view2/path/file_fr.html').yields(true);
+            localisedView.existsFn.withArgs(path.resolve('/view1', 'path/file_en.html')).yields(true);
+            localisedView.existsFn.withArgs(path.resolve('/view2', 'path/file_fr.html')).yields(true);
 
             instance.render(opts, cb);
 
-            env.render.should.have.been.calledWithExactly('path/file_fr.html', opts, cb);
+            env.render.should.have.been.calledWithExactly(path.join('path', 'file_fr.html'), opts, cb);
         });
 
         it('calls parent if no found file', () => {
@@ -334,7 +334,7 @@ describe('i18n.middleware', function () {
 
             instance.render({}, cb);
 
-            localisedView.existsFn.should.have.been.calledWith('/nunjucks/path/file_en.html');
+            localisedView.existsFn.should.have.been.calledWith(path.resolve('/nunjucks/', 'path/file_en.html'));
         });
 
         it('gets views from express views', () => {
@@ -349,7 +349,7 @@ describe('i18n.middleware', function () {
 
             instance.render({}, cb);
 
-            localisedView.existsFn.should.have.been.calledWith('/express/path/file_en.html');
+            localisedView.existsFn.should.have.been.calledWith(path.resolve('/express/', 'path/file_en.html'));
         });
 
         it('get cached file', () => {
@@ -384,8 +384,8 @@ describe('i18n.middleware', function () {
 
             // final cache state
             localisedView.cache.should.deep.equal({
-                '/express/path/file_en.html': true,
-                '/express/path/new_en.html': false
+                [path.resolve('/express/', 'path/file_en.html')]: true,
+                [path.resolve('/express/', 'path/new_en.html')]: false
             });
 
         });

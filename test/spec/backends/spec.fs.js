@@ -58,6 +58,33 @@ describe('fs backend', function () {
             });
         });
 
+        it('loads locales when the configured path contains Windows separators', function (done) {
+            backend.load({
+                path: 'locales\\__lng__\\__ns__.__ext__',
+                baseDir: path.resolve(__dirname)
+            }, function (err, data) {
+                if (err) return done(err);
+                expect(data.en).to.eql({
+                    test: {
+                        name: 'Jack',
+                        namespaced: 'item',
+                        deep: {
+                            object: 'Other English'
+                        }
+                    }
+                });
+                expect(data.de).to.eql({
+                    test: {
+                        name: 'Hans',
+                        deep: {
+                            object: 'German'
+                        }
+                    }
+                });
+                done();
+            });
+        });
+
         it('uses the baseDir from options', function (done) {
             backend.load({
                 baseDir: path.resolve(__dirname)
